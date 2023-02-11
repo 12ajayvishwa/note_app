@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:node_app/presentation/widgets.dart';
 
+import '../home.dart';
+
 class AddNotes extends StatefulWidget {
   const AddNotes({super.key});
 

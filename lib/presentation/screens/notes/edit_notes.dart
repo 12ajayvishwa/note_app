@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:node_app/cubit/app_cubit.dart';
 import 'package:node_app/presentation/widgets.dart';
 
+import '../home.dart';
+
 class EditNotes extends StatefulWidget {
   const EditNotes({super.key, required this.note, required this.docId});
   final note;
