@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:node_app/cubit/app_cubit.dart';
 import 'package:node_app/presentation/screens/notes/add_notes.dart';
-import 'package:node_app/presentation/screens/notes/view_notes.dart';
 import 'package:node_app/presentation/screens/sign_in.dart';
 
 import '../../models/note.dart';
