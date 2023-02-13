@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:node_app/bloc/active_todo_count/active_todo_count_bloc.dart';
+import 'package:node_app/bloc/blocs.dart';
 import 'package:node_app/data/note_repository.dart';
+import 'package:node_app/pages/page_todo.dart';
 import 'package:node_app/presentation/screens/home.dart';
 
 import 'cubit/app_cubit.dart';
@@ -32,43 +35,65 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    return BlocProvider<AppCubit>(
-      create: (context) => AppCubit(
-          repository: NoteRepository(
-              firestore: FirebaseFirestore.instance.collection('notes')),
-          firebaseAuth: firebaseAuth),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        routes: {
-          'home': (context) => const Home(),
-          'signin': (context) => SignIn(),
-          'signup': (context) => SignUp(),
-          'add': (context) => const AddNotes(),
-        },
-        home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              if (snapshot.hasData) {
-                return const Home();
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('${snapshot.error}'),
-                );
-              }
-            }
-            if (snapshot.connectionState == ConnectionState.active) {
-              return SignIn();
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.deepOrangeAccent,
-                ),
-              );
-            }
-          },
-        ),
-      ),
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<TodoFilterBloc>(create: (context) => TodoFilterBloc()),
+          BlocProvider<TodoSearchBloc>(create: (context) => TodoSearchBloc()),
+          BlocProvider<TodoListBloc>(create: (context) => TodoListBloc()),
+          BlocProvider<ActiveTodoCountBloc>(
+              create: (context) => ActiveTodoCountBloc(
+                  initialActiveTodoCount:
+                      context.read<TodoListBloc>().state.todos.length)),
+          BlocProvider<FilteredTodosBloc>(
+              create: (context) => FilteredTodosBloc(
+                  initialTodos: context.read<TodoListBloc>().state.todos))
+        ],
+        child: MaterialApp(
+          title: 'TODO',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const TodoPage(),
+        ));
+
+    // BlocProvider<AppCubit>(
+    //   create: (context) => AppCubit(
+    //       repository: NoteRepository(
+    //           firestore: FirebaseFirestore.instance.collection('notes')),
+    //       firebaseAuth: firebaseAuth),
+    //   child: MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     routes: {
+    //       'home': (context) => const Home(),
+    //       'signin': (context) => SignIn(),
+    //       'signup': (context) => SignUp(),
+    //       'add': (context) => const AddNotes(),
+    //     },
+    //     home: StreamBuilder(
+    //       stream: FirebaseAuth.instance.authStateChanges(),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.connectionState == ConnectionState.active) {
+    //           if (snapshot.hasData) {
+    //             return const Home();
+    //           } else if (snapshot.hasError) {
+    //             return Center(
+    //               child: Text('${snapshot.error}'),
+    //             );
+    //           }
+    //         }
+    //         if (snapshot.connectionState == ConnectionState.active) {
+    //           return SignIn();
+    //         } else {
+    //           return const Center(
+    //             child: CircularProgressIndicator(
+    //               color: Colors.deepOrangeAccent,
+    //             ),
+    //           );
+    //         }
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 }
