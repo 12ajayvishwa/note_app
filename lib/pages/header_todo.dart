@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:node_app/bloc/active_todo_count/active_todo_count_bloc.dart';
-
 import '../bloc/todo_list/todo_list_bloc.dart';
 import '../models/model_todo.dart';
 
@@ -19,19 +16,26 @@ class TodoHeader extends StatelessWidget {
           'TODO',
           style: TextStyle(fontSize: 40.0),
         ),
-        BlocListener<TodoListBloc,TodoListState>(
-          listener:(context, state) {
+        BlocListener<TodoListBloc, TodoListState>(
+          listener: (context, state) {
             final int activeTodoCount = state.todos
-            .where((Todo todo) => !todo.completed)
-            .toList()
-            .length;
+                .where((Todo todo) => !todo.completed)
+                .toList()
+                .length;
 
-            context.read<ActiveTodoCountBloc>()
-            .add(CalculateActiveTodoCountEvent(activeTodoCount));
+            context
+                .read<ActiveTodoCountBloc>()
+                .add(CalculateActiveTodoCountEvent(activeTodoCount));
           },
-          child: BlocBuilder<ActiveTodoCountBloc, ActiveTodoCountState>(builder: ),
-          
-          )
+          child: BlocBuilder<ActiveTodoCountBloc, ActiveTodoCountState>(
+            builder: (context, state) {
+              return Text(
+                '${state.activeTodoCount} items left',
+                style: const TextStyle(fontSize: 20.0, color: Colors.redAccent),
+              );
+            },
+          ),
+        )
       ],
     );
   }
