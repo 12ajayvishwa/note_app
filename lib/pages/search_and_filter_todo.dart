@@ -28,14 +28,7 @@ class SearchAndFilterTodo extends StatelessWidget {
           },
         ),
         const SizedBox(height: 10.0,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            filterButton(context, Filter.all),
-            filterButton(context, Filter.active),
-            filterButton(context, Filter.completed),
-          ],
-        )
+       
       ],
     );
   }

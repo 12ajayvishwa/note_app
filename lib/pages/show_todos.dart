@@ -194,7 +194,7 @@ class _TodoItemState extends State<TodoItem> {
                                   ? true
                                   : false;
                               if (!_error) {
-                                context.read()<TodoListBloc>().add(
+                                context.read()<TodoListBloc>(context,listen:false).removeAll().add(
                                     EditTodoEvent(widget.todo.id,
                                         textEditingController.text));
                                 Navigator.pop(context);
